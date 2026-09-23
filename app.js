@@ -1,14 +1,30 @@
 const video = document.getElementById("camara");
+const boton = document.getElementById("boton");
 
-navigator.mediaDevices.getUserMedia({
-    video: {
-        facingMode: "environment"
-    },
-    audio: false
-})
-.then(stream => {
-    video.srcObject = stream;
-})
-.catch(error => {
-    alert("Error: " + error.name + " - " + error.message);
+boton.addEventListener("click", async () => {
+
+    try {
+
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                facingMode: {
+                    ideal: "environment"
+                }
+            },
+            audio: false
+        });
+
+        video.srcObject = stream;
+
+        await video.play();
+
+        boton.style.display = "none";
+
+    } catch (error) {
+
+        alert("No se pudo iniciar la cámara: " + error.message);
+
+        console.error(error);
+    }
+
 });
