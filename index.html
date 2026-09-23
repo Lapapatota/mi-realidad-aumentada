@@ -4,17 +4,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prueba de cámara</title>
-    <link rel="stylesheet" href="style.css">
+
+    <title>Mi realidad aumentada</title>
+
+    <!-- A-Frame -->
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+
+    <!-- MindAR -->
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+
+        #mensaje {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+
+            background: rgba(0, 0, 0, 0.75);
+            color: white;
+            padding: 12px 18px;
+            border-radius: 10px;
+
+            font-family: Arial, sans-serif;
+        }
+    </style>
 </head>
 
 <body>
 
-    <button id="boton">📷 Activar cámara</button>
+    <div id="mensaje">
+        📷 Apunta a la imagen...
+    </div>
 
-    <video id="camara" autoplay muted playsinline></video>
+    <a-scene
+        mindar-image="imageTargetSrc: assets/targets.mind;"
+        color-space="sRGB"
+        renderer="colorManagement: true, physicallyCorrectLights"
+        vr-mode-ui="enabled: false"
+        device-orientation-permission-ui="enabled: false">
 
-    <script src="app.js"></script>
+        <a-camera
+            position="0 0 0"
+            look-controls="enabled: false">
+        </a-camera>
+
+        <a-entity mindar-image-target="targetIndex: 0">
+
+            <!-- AQUÍ aparecerá nuestro efecto -->
+
+            <a-box
+                position="0 0 0"
+                rotation="0 0 0"
+                color="#00ff00"
+                scale="0.5 0.5 0.5"
+                animation="property: rotation; to: 0 360 0; loop: true; dur: 3000">
+            </a-box>
+
+        </a-entity>
+
+    </a-scene>
+
+    <script>
+        const mensaje = document.getElementById("mensaje");
+
+        const escena = document.querySelector("a-scene");
+
+        escena.addEventListener("targetFound", () => {
+            mensaje.textContent = "🔥 ¡IMAGEN DETECTADA!";
+        });
+
+        escena.addEventListener("targetLost", () => {
+            mensaje.textContent = "📷 Apunta a la imagen...";
+        });
+    </script>
 
 </body>
 
